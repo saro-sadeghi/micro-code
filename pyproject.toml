@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "micro-code"
+version = "0.1.0"
+description = "A tiny coding agent for your terminal"
+requires-python = ">=3.11"
+
+[project.scripts]
+micro = "microcode.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["microcode*"]
