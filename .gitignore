@@ -1,4 +1,5 @@
 .env
 .venv
-.mini_cc.db
-.micro_code.egg-info
+mini_cc.db
+micro_code.egg-info
+__pycache__
