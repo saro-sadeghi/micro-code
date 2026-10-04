@@ -1,7 +1,6 @@
 .env
 .venv/
-.mini_cc.db
-.micro_code.egg-info/
+*.egg-info/
 __pycache__/
 *.pyc
-*.pyo
+.mini_cc.db
