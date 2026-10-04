@@ -7,9 +7,12 @@ from typing import Any
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
+from rich.prompt import Confirm
 from rich.syntax import Syntax
 
 console = Console()
+
+COMMAND_TOOLS = frozenset({"run_command", "run_script"})
 
 
 def is_truthy(value) -> bool:
@@ -18,6 +21,35 @@ def is_truthy(value) -> bool:
 
 def loop_verbose(cfg: dict | None) -> bool:
     return is_truthy((cfg or {}).get("show_agent_loop"))
+
+
+def command_permission_mode(cfg: dict | None) -> str:
+    value = str((cfg or {}).get("command_permission") or "ask").strip().lower()
+    if value in {"allow", "always", "auto"}:
+        return "allow"
+    return "ask"
+
+
+def command_preview(name: str, arguments: dict | None) -> str:
+    args = arguments or {}
+    if name == "run_command":
+        return str(args.get("command") or "")
+    if name == "run_script":
+        parts = [str(args.get("command") or "")]
+        parts.extend(str(a) for a in (args.get("args") or []))
+        return " ".join(p for p in parts if p).strip()
+    return json.dumps(_clip_args(args), indent=2, ensure_ascii=False)
+
+
+def ask_to_run_command(name: str, arguments: dict | None) -> bool:
+    preview = command_preview(name, arguments) or "(empty)"
+    console.print(Panel(
+        preview,
+        title=f"[bold yellow]permission[/] {name}",
+        border_style="yellow",
+        expand=False,
+    ))
+    return Confirm.ask("Run this command?", default=False)
 
 _ARG_STR_LIMIT = 400
 _RESULT_LIMIT = 4000

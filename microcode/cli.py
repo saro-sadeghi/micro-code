@@ -7,7 +7,7 @@ from rich.table import Table
 
 from .agent import agent
 from .db import cfg_get, cfg_set, list_sessions, load_messages, new_session, push, session_exists
-from .onboarding import ask_show_agent_loop, setup
+from .onboarding import ask_command_permission, ask_show_agent_loop, setup
 from .providers import make_client
 from .ui import console
 
@@ -25,8 +25,11 @@ def main():
     c = cfg_get()
     if not c.get("model"):
         c = setup()
-    elif "show_agent_loop" not in c:
-        cfg_set(show_agent_loop=ask_show_agent_loop())
+    else:
+        if "show_agent_loop" not in c:
+            cfg_set(show_agent_loop=ask_show_agent_loop())
+        if "command_permission" not in c:
+            cfg_set(command_permission=ask_command_permission())
         c = cfg_get()
     client = make_client(c)
     sid, history = None, []  # a session row is created on the first message
@@ -65,8 +68,12 @@ border_style="blue"))
             client = make_client(c)
 
         elif q == "/loop":
-           cfg_set(show_agent_loop=ask_show_agent_loop())
-           c = cfg_get()
+            cfg_set(show_agent_loop=ask_show_agent_loop(c.get("show_agent_loop")))
+            c = cfg_get()
+        elif q == "/permission":
+            cfg_set(command_permission=ask_command_permission(c.get("command_permission")))
+            c = cfg_get()
+            console.print(f"[dim]Command permission: {c.get('command_permission', 'ask')}[/]")
         elif q == "/model":
             model = Prompt.ask("Model name")
             cfg_set(model=model)

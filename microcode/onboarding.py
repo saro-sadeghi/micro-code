@@ -31,9 +31,11 @@ def setup():
     model = pick("Model", presets) if presets else None
     model = model or Prompt.ask("Model name")
     api_key = Prompt.ask("API key (empty = none)", password=True) or "none"
-    show_agent_loop = ask_show_agent_loop(cfg_get().get("show_agent_loop"))
+    saved = cfg_get()
+    show_agent_loop = ask_show_agent_loop(saved.get("show_agent_loop"))
+    command_permission = ask_command_permission(saved.get("command_permission"))
     cfg_set(provider=provider, model=model, api_key=api_key, base_url=base_url,
-            show_agent_loop=show_agent_loop)
+            show_agent_loop=show_agent_loop, command_permission=command_permission)
     console.print("[green]Saved.[/]")
     return cfg_get()
 
@@ -45,3 +47,13 @@ def ask_show_agent_loop(current=None):
         default=is_truthy(current),
     )
     return "1" if enabled else "0"
+
+
+def ask_command_permission(current=None):
+    """Ask vs always-allow for shell commands. Default is ask each time."""
+    mode = str(current or "ask").strip().lower()
+    default = "2" if mode in {"allow", "always", "auto"} else "1"
+    console.print("  [cyan]1[/]. Ask for permission each time")
+    console.print("  [cyan]2[/]. Allow running commands every time")
+    choice = Prompt.ask("Command permission", choices=["1", "2"], default=default)
+    return "ask" if choice == "1" else "allow"
