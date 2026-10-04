@@ -1,2 +1,0 @@
-[console_scripts]
-micro = microcode.cli:main
