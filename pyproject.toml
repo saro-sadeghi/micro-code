@@ -1,15 +1,38 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "micro-code"
 version = "0.1.0"
-description = "A tiny coding agent for your terminal"
+description = "A tiny, token-efficient coding agent for your terminal"
+readme = "README.md"
 requires-python = ">=3.11"
+authors = [{ name = "Saro Sadeghi" }]
+keywords = ["coding-agent", "cli", "llm", "developer-tools"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+  "rich>=13.7,<15",
+  "openai>=1.30,<3",
+  "anthropic>=0.30,<2",
+]
 
 [project.scripts]
 micro = "microcode.cli:main"
 
+[project.urls]
+Homepage = "https://github.com/saro-sadeghi/micro-code"
+Repository = "https://github.com/saro-sadeghi/micro-code"
+Issues = "https://github.com/saro-sadeghi/micro-code/issues"
+
 [tool.setuptools.packages.find]
+where = ["."]
 include = ["microcode*"]
