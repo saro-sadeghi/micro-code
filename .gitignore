@@ -4,4 +4,4 @@
 __pycache__/
 *.pyc
 .mini_cc.db
-*.build/
+build/

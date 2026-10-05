@@ -166,4 +166,4 @@ python -m pytest
 
 ## License
 
-Choose a license before publishing and add the corresponding `LICENSE` file.
+MIT ©.
